@@ -120,6 +120,9 @@ int main()
         serial_W = new int[n * n];
         random_matrices(W, serial_W, n, n);
 
+        print_matrix(W, n, n);
+        print_matrix(serial_W, n, n);
+
         min_plus_gpu(W, n);
         serial_min_plus(serial_W, n);
     } catch (cuda_exception &err) {
