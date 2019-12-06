@@ -71,7 +71,7 @@ void serial_min_plus(int *A, size_t n) {
     }
 }
 
-#define BLOCK_SIZE 4
+#define BLOCK_SIZE 16
 
 __global__ void min_plus_kernel(int *C, size_t n, size_t k) 
 {
@@ -83,6 +83,9 @@ __global__ void min_plus_kernel(int *C, size_t n, size_t k)
     const unsigned int kj = k *n + j;
     const unsigned int ij = i*n + j;
     const unsigned int ik = i*n + k;
+    printf(%d, kj);
+    printf(%d, ij);
+    printf(%d, ik);
 
     int t1 = C[ik] + C[kj];
     int t2 = C[ij];
@@ -98,7 +101,7 @@ void min_plus_gpu(int *C, size_t n)
     checkCudaError("allocating GPU memory for matrix");
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
     for (int k = 0; k < n; k++) {
-        min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n*n, k);
+        min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
     }
 
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
@@ -115,7 +118,7 @@ int main()
     // cout << "Please enter a value for n: " << endl;
     // cin >> n;
     
-    assert(n % BLOCK_SIZE == 0);
+    // assert(n % BLOCK_SIZE == 0);
 
     try {
         
