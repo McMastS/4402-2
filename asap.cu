@@ -56,13 +56,16 @@ void print_matrix(const T *M, size_t height, size_t width)
 }
 
 void serial_min_plus(int *A, size_t n) {
-    
     for (int k = 0; k < n; k++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                int t1 = A[i][k] + A[k][j]; 
-                int t2 = A[i][j];
-                A[i][j] = (t1 < t2) ? t1 : t2; 
+                const unsigned int kj = k *n + j;
+                const unsigned int ij = i*n + j;
+                const unsigned int ik = i*n + k;
+
+                int t1 = C[ik] + C[kj];
+                int t2 = C[ij];
+                A[ij] = (t1 < t2) ? t1: t2;
             }
         }
     }
