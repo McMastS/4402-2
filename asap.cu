@@ -53,7 +53,7 @@ void print_matrix(const T *M, size_t height, size_t width)
     cout << endl;
 }
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 4
 
 __global__ void min_plus_kernel(int *C, size_t n, size_t k) 
 {
@@ -71,6 +71,23 @@ __global__ void min_plus_kernel(int *C, size_t n, size_t k)
     C[ij] = (t1 < t2) ? t1: t2;
 }
 
+void min_plus_gpu(int *C, size_t n)
+{
+    size_t mem_size = n * n * sizeof(int);
+
+    int *Cd;
+    cudaMalloc((void **)&Cd, mem_size);
+    checkCudaError("allocating GPU memory for matrix");
+    cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
+    for (int k = 0; k < n; k++) {
+        min_plus_kernel<<<N/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
+    }
+
+    cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
+
+    cudaFree(Cd);
+}
+
 int main()
 {
     int *W;
@@ -80,11 +97,11 @@ int main()
     
     assert(n % BLOCK_SIZE == 0);
 
-    size_t mem_size = n * n * sizeof(int);
-
     try {
         W = new int[n * n];
         random_matrix(W, n, n);
+
+        min_plus_gpu(W, n);
     } catch (cuda_exception &err) {
         cout << err.what() << endl;
         delete [] W;
