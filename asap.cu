@@ -109,16 +109,24 @@ void min_plus_gpu(int *C, size_t n)
 int main()
 {
     int *W, *serial_W;
-    int n;
-    cout << "Please enter a value for n: " << endl;
-    cin >> n;
+    int n = 4;
+    // cout << "Please enter a value for n: " << endl;
+    // cin >> n;
     
     assert(n % BLOCK_SIZE == 0);
 
     try {
         W = new int[n * n];
         serial_W = new int[n * n];
-        random_matrices(W, serial_W, n, n, 10);
+        // random_matrices(W, serial_W, n, n, 10);
+        W = [0, 3, INT_MAX, 7, 
+            8, 0, 2, INT_MAX, 
+            5, INT_MAX, 0, 1,
+            2, INT_MAX, INT_MAX, 0]
+        serial_W = [0, 3, INT_MAX, 7, 
+            8, 0, 2, INT_MAX, 
+            5, INT_MAX, 0, 1,
+            2, INT_MAX, INT_MAX, 0]
 
         print_matrix(W, n, n);
         print_matrix(serial_W, n, n);
