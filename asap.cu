@@ -60,19 +60,20 @@ __global__ void min_plus_kernel(int *C, size_t n, size_t k)
     const unsigned int i = blockIdx.y * blockDim.y + threadIdx.y;
     const unsigned int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if ((i >= n)) || (j >= n) || (k >= n)) return;
+    if ((i >= n) || (j >= n) || (k >= n)) return;
 
     const unsigned int kj = k *n + j;
     const unsigned int ij = i*n + j;
     const unsigned int ik = i*n + k;
 
-    int t1 = C[ik] + graph[kj];
+    int t1 = C[ik] + C[kj];
     int t2 = C[ij];
     C[ij] = (t1 < t2) ? t1: t2;
 }
 
-void main()
+int main()
 {
+    int *W;
     int n;
     cout << "Please enter a value for n: " << endl;
     cin >> n;
