@@ -100,7 +100,7 @@ void min_plus_gpu(int *C, size_t n)
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
     for (int k = 0; k < n; k++) {
         min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
-        cout << k << endl;
+        cudaDeviceSynchronize();
     }
 
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
