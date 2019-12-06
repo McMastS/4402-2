@@ -84,9 +84,6 @@ __global__ void min_plus_kernel(int *C, size_t n, size_t k)
     const unsigned int kj = k *n + j;
     const unsigned int ij = i*n + j;
     const unsigned int ik = i*n + k;
-    printf(%d, kj);
-    printf(%d, ij);
-    printf(%d, ik);
 
     int t1 = C[ik] + C[kj];
     int t2 = C[ij];
@@ -103,6 +100,7 @@ void min_plus_gpu(int *C, size_t n)
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
     for (int k = 0; k < n; k++) {
         min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
+        cout << k << endl;
     }
 
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
