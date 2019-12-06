@@ -63,8 +63,8 @@ void serial_min_plus(int *A, size_t n) {
                 const unsigned int ij = i*n + j;
                 const unsigned int ik = i*n + k;
 
-                int t1 = C[ik] + C[kj];
-                int t2 = C[ij];
+                int t1 = A[ik] + A[kj];
+                int t2 = A[ij];
                 A[ij] = (t1 < t2) ? t1: t2;
             }
         }
@@ -108,7 +108,7 @@ void min_plus_gpu(int *C, size_t n)
 
 int main()
 {
-    int *W, serial_W;
+    int *W, *serial_W;
     int n;
     cout << "Please enter a value for n: " << endl;
     cin >> n;
