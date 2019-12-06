@@ -60,9 +60,9 @@ void serial_min_plus(int *A, size_t n) {
     for (int k = 0; k < n; k++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                t1 = A[i][k] + A[k][j]; 
-                t2 = A[i][j];
-                A[i][j] = ((t1 < t2) ? t1 : t2; 
+                int t1 = A[i][k] + A[k][j]; 
+                int t2 = A[i][j];
+                A[i][j] = (t1 < t2) ? t1 : t2; 
             }
         }
     }
@@ -105,7 +105,7 @@ void min_plus_gpu(int *C, size_t n)
 
 int main()
 {
-    int *W;
+    int *W, serial_W;
     int n;
     cout << "Please enter a value for n: " << endl;
     cin >> n;
@@ -115,7 +115,7 @@ int main()
     try {
         W = new int[n * n];
         serial_W = new int[n * n];
-        random_matrix(W, serial_W, n, n);
+        random_matrices(W, serial_W, n, n);
 
         min_plus_gpu(W, n);
         serial_min_plus(serial_W, n);
