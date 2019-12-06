@@ -116,17 +116,9 @@ int main()
     assert(n % BLOCK_SIZE == 0);
 
     try {
-        W = new int[n * n];
-        serial_W = new int[n * n];
+        int W [n * n] = {0, 3, INT_MAX, 7, 8, 0, 2, INT_MAX, 5, INT_MAX, 0, 1, 2, INT_MAX, INT_MAX, 0};
+        int serial_W [n*n] = {0, 3, INT_MAX, 7, 8, 0, 2, INT_MAX, 5, INT_MAX, 0, 1, 2, INT_MAX, INT_MAX, 0};
         // random_matrices(W, serial_W, n, n, 10);
-        W = [0, 3, INT_MAX, 7, 
-            8, 0, 2, INT_MAX, 
-            5, INT_MAX, 0, 1,
-            2, INT_MAX, INT_MAX, 0]
-        serial_W = [0, 3, INT_MAX, 7, 
-            8, 0, 2, INT_MAX, 
-            5, INT_MAX, 0, 1,
-            2, INT_MAX, INT_MAX, 0]
 
         print_matrix(W, n, n);
         print_matrix(serial_W, n, n);
