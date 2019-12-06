@@ -118,7 +118,7 @@ int main()
     try {
         W = new int[n * n];
         serial_W = new int[n * n];
-        random_matrices(W, serial_W, n, n);
+        random_matrices(W, serial_W, n, n, 10);
 
         print_matrix(W, n, n);
         print_matrix(serial_W, n, n);
