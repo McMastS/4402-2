@@ -49,7 +49,7 @@ void print_matrix(const T *M, size_t height, size_t width) {
     cout << endl;
 }
 
-#define BLOCK_SIZE 8
+#define BLOCK_SIZE 16
 
 /**
  * CUDA kernel for matrix multiplication, blockwise multiplcation
@@ -217,9 +217,9 @@ double matrix_mul_gpu(T* C, const T* A, const T* B, int ha, int wa, int wb) {
  */
 int matrix_mul_test(int argc, char **argv) {
     int *A, *B, *C;
-    size_t eha = 2;
-    size_t ewa = 2;
-    size_t ewb = 2;
+    size_t eha = 4;
+    size_t ewa = 4;
+    size_t ewb = 4;
 
     if (argc == 2) {
         eha = ewa = ewb = atoi(argv[1]);
