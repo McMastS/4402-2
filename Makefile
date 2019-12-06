@@ -7,11 +7,11 @@ NVCC = nvcc
 
 SRCCC =
 
-SRCCU = min_plus.cu
+SRCCU = asap.cu
 
 NVCCFLAGS = -c -O2 --compiler-bindir /usr/bin/cuda-g++
 
-EXE = min_plus
+EXE = asap
 
 RM = rm -f
 
