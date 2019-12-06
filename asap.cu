@@ -111,7 +111,7 @@ int main()
     // int *W, *serial_W;
     int n = 4;
     int W [n * n] = {0, 3, 100, 7, 8, 0, 2, 100, 5, 100, 0, 1, 2, 100, 100, 0};
-    int serial_W [n*n] = {0, 3, 100, 7, 8, 0, 2, 100, 5, 100, 0, 1, 2, 100, INT_MAX, 0};
+    int serial_W [n*n] = {0, 3, 100, 7, 8, 0, 2, 100, 5, 100, 0, 1, 2, 100, 100, 0};
     // cout << "Please enter a value for n: " << endl;
     // cin >> n;
     
@@ -128,12 +128,12 @@ int main()
         serial_min_plus(serial_W, n);
     } catch (cuda_exception &err) {
         cout << err.what() << endl;
-        delete [] W;
-        delete [] serial_W;
+        // delete [] W;
+        // delete [] serial_W;
         return EXIT_FAILURE;
     } catch (...) {
-        delete [] W;
-        delete [] serial_W;
+        // delete [] W;
+        // delete [] serial_W;
         cout << "unknown exeception" << endl;
         return EXIT_FAILURE;
     }
@@ -141,7 +141,7 @@ int main()
     print_matrix(W, n, n);
     print_matrix(serial_W, n, n);
 
-    delete [] W;
-    delete [] serial_W;
+    // delete [] W;
+    // delete [] serial_W;
     return 0;
 }
