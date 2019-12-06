@@ -2,6 +2,7 @@
 #include <string>
 #include <cassert>
 #include <ctime>
+#include <stdio.h>
 
 using namespace std;
 
