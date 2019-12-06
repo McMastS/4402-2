@@ -27,11 +27,13 @@ void checkCudaError(const char *msg)
 }
 
 template<typename T>
-void random_matrix(T *M, size_t height, size_t width, int p = 2) 
+void random_matrices(T *M, T *N, size_t height, size_t width, int p = 2) 
 {
     for(size_t i = 0; i < height; ++i) {
         for (size_t j = 0; j < width; ++j) {
-            M[i * width + j] = rand() % p; 
+            int random = rand() % p;
+            M[i * width + j] = random;
+            N[i * width + j] = random; 
         }
     }
 }
@@ -51,6 +53,19 @@ void print_matrix(const T *M, size_t height, size_t width)
         cout << endl;
     }
     cout << endl;
+}
+
+void serial_min_plus(int *A, size_t n) {
+    
+    for (int k = 0; k < n; k++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                t1 = A[i][k] + A[k][j]; 
+                t2 = A[i][j];
+                A[i][j] = ((t1 < t2) ? t1 : t2; 
+            }
+        }
+    }
 }
 
 #define BLOCK_SIZE 4
@@ -80,7 +95,7 @@ void min_plus_gpu(int *C, size_t n)
     checkCudaError("allocating GPU memory for matrix");
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
     for (int k = 0; k < n; k++) {
-        min_plus_kernel<<<N/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
+        min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
     }
 
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
@@ -99,21 +114,27 @@ int main()
 
     try {
         W = new int[n * n];
-        random_matrix(W, n, n);
+        serial_W = new int[n * n];
+        random_matrix(W, serial_W, n, n);
 
         min_plus_gpu(W, n);
+        serial_min_plus(serial_W, n);
     } catch (cuda_exception &err) {
         cout << err.what() << endl;
         delete [] W;
+        delete [] serial_W;
         return EXIT_FAILURE;
     } catch (...) {
         delete [] W;
+        delete [] serial_W;
         cout << "unknown exeception" << endl;
         return EXIT_FAILURE;
     }
 
     print_matrix(W, n, n);
+    print_matrix(serial_W, n, n);
 
     delete [] W;
+    delete [] serial_W;
     return 0;
 }
