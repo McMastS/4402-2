@@ -63,7 +63,7 @@ void print_matrix(const T *M, size_t height, size_t width) {
  * returns void.
  * 
  * The heights of A and B are not passed since wa, wb and
- * the  block indices are sufficient to dertmine the leading
+ * the  block indices are sufficient to determine the leading
  * position of the matrix tile that a given thread is working on 
  *
  * One thread block is computing a tile in C, thus, it
@@ -217,9 +217,9 @@ double matrix_mul_gpu(T* C, const T* A, const T* B, int ha, int wa, int wb) {
  */
 int matrix_mul_test(int argc, char **argv) {
     int *A, *B, *C;
-    size_t eha = 4;
-    size_t ewa = 4;
-    size_t ewb = 4;
+    size_t eha = 2;
+    size_t ewa = 2;
+    size_t ewb = 2;
 
     if (argc == 2) {
         eha = ewa = ewb = atoi(argv[1]);
