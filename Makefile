@@ -9,7 +9,7 @@ SRCCC =
 
 SRCCU = asap.cu
 
-NVCCFLAGS = -c -O2 --compiler-bindir /usr/bin/cuda-g++
+NVCCFLAGS = -c -O2 --compiler-bindir /usr/bin/cuda-g++ -arch compute_20 printf.cu
 
 EXE = asap
 
