@@ -49,7 +49,7 @@ void print_matrix(const T *M, size_t height, size_t width) {
     cout << endl;
 }
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 8
 
 /**
  * CUDA kernel for matrix multiplication, blockwise multiplcation
