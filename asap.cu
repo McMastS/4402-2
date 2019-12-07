@@ -99,11 +99,11 @@ void min_plus_gpu(int *C, size_t n)
     checkCudaError("allocating GPU memory for matrix");
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
 
-    dim3 block_dim(BLOCK_DIM, BLOCK_DIM, 1);
-    dim3 grid_dim((n + block_dim.x - 1) / block_dim.x,
-        (n + block_dim.y - 1) / block_dim.y);
+    dim3 block_size(BLOCK_SIZE, BLOCK_SIZE, 1);
+    dim3 grid_dim((n + block_size.x - 1) / block_size.x,
+        (n + block_size.y - 1) / block_size.y);
     for (int k = 0; k < n; k++) {
-        min_plus_kernel<<<grid_dim, block_dim>>>(Cd, n, k);
+        min_plus_kernel<<<grid_dim, block_size>>>(Cd, n, k);
         cudaThreadSynchronize();
     }
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
