@@ -35,18 +35,19 @@ void random_graph_matrices(T *M, T *N, size_t height, size_t width, int p = 2)
             // Set diagonals to zero
             if (i == j) {
                 M[i * width + j] = 0;
-            }
-            // Add random infinities, around half the graph will be infinite
-            int inf = rand() % 2;
-            if (inf) {
-                M[i* width + j] = 100000;
-                N[i * width + j] = 100000;
             } else {
-                // Generate random number between 0 and p to represent the current edge
-                int random = rand() % p;
-                M[i * width + j] = random;
-                N[i * width + j] = random;
-            } 
+                // Add random infinities, around half the graph will be "infinite"
+                int inf = rand() % 2;
+                if (inf) {
+                    M[i* width + j] = 100000;
+                    N[i * width + j] = 100000;
+                } else {
+                    // Generate random number between 0 and p to represent the current edge
+                    int random = rand() % p;
+                    M[i * width + j] = random;
+                    N[i * width + j] = random;
+                } 
+            }
         }
     }
 }
