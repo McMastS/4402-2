@@ -42,8 +42,8 @@ void random_graph_matrices(T *M, T *N, size_t height, size_t width, int p = 2)
                     M[i* width + j] = 100000;
                     N[i * width + j] = 100000;
                 } else {
-                    // Generate random number between 0 and p to represent the current edge
-                    int random = rand() % p;
+                    // Generate random number between 1 and p+1 to represent the current edge
+                    int random = rand() % p + 1;
                     M[i * width + j] = random;
                     N[i * width + j] = random;
                 } 
