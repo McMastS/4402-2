@@ -117,7 +117,7 @@ void min_plus_gpu(int *C, size_t n)
     for (int k = 0; k < n; k++) {
         min_plus_kernel<<<grid_dim, block_size>>>(Cd, n, k);
         cudaThreadSynchronize();
-        checkCudaError(strcat("call the matrix multiplication kernel"));
+        checkCudaError("call the matrix multiplication kernel");
     }
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
 
