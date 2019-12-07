@@ -125,12 +125,18 @@ void floyd_warshall_gpu(int *C, size_t n)
     cudaFree(Cd);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     int *W, *serial_W;
     int n;
-    cout << "Please enter a value for n: " << endl;
-    cin >> n;
+    if (argc == 2) {
+        n = argv[1];
+    } else if (argc == 1) {
+        cout << "Please enter a value for n: " << endl;
+        cin >> n;
+    } else {
+        cout << "Usage: ./asap {n}"
+    }
     W = new int[n * n];
     serial_W = new int[n*n]; 
  
