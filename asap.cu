@@ -85,25 +85,25 @@ void serial_min_plus(int *A, size_t n) {
     }
 }
 
-#define BLOCK_SIZE 4
+#define BLOCK_SIZE 16
 
 __global__ void min_plus_kernel(int *C, size_t n, size_t k) 
 {
     const unsigned int i = blockIdx.y * blockDim.y + threadIdx.y;
     const unsigned int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if ((i >= n) || (j >= n) || (k >= n)) return;
+    if ((i < n) && (j < n) && (k < n)) {
+        const unsigned int kj = k *n + j;
+        const unsigned int ij = i*n + j;
+        const unsigned int ik = i*n + k;
 
-    const unsigned int kj = k *n + j;
-    const unsigned int ij = i*n + j;
-    const unsigned int ik = i*n + k;
-
-    int t1 = C[ik] + C[kj];
-    int t2 = C[ij];
-    C[ij] = (t1 < t2) ? t1: t2;
+        int t1 = C[ik] + C[kj];
+        int t2 = C[ij];
+        C[ij] = (t1 < t2) ? t1: t2;
+    }
 }
 
-void min_plus_gpu(int *C, size_t n)
+void floyd_warshall_gpu(int *C, size_t n)
 {
     size_t mem_size = n * n * sizeof(int);
 
@@ -141,7 +141,7 @@ int main()
         print_matrix(W, n, n);
         print_matrix(serial_W, n, n);
 
-        min_plus_gpu(W, n);
+        floyd_warshall_gpu(W, n);
         serial_min_plus(serial_W, n);
     } catch (cuda_exception &err) {
         cout << err.what() << endl;
