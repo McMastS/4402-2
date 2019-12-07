@@ -72,7 +72,7 @@ void serial_min_plus(int *A, size_t n) {
     }
 }
 
-#define BLOCK_SIZE 16
+#define BLOCK_SIZE 4
 
 __global__ void min_plus_kernel(int *C, size_t n, size_t k) 
 {
@@ -98,10 +98,14 @@ void min_plus_gpu(int *C, size_t n)
     cudaMalloc((void **)&Cd, mem_size);
     checkCudaError("allocating GPU memory for matrix");
     cudaMemcpy(Cd, C, mem_size, cudaMemcpyHostToDevice);
+
+    dim3 grid_dim((n + block_dim.x - 1) / block_dim.x,
+        (n + block_dim.y - 1) / block_dim.y);
+    dim3 block_dim(BLOCK_DIM, BLOCK_DIM, 1);
     for (int k = 0; k < n; k++) {
-        min_plus_kernel<<<n/BLOCK_SIZE, BLOCK_SIZE>>>(Cd, n, k);
+        min_plus_kernel<<<grid_dim, block_dim>>>(Cd, n, k);
+        cudaThreadSynchronize();
     }
-    cudaDeviceSynchronize();
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
 
     cudaFree(Cd);
