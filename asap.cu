@@ -127,6 +127,7 @@ void min_plus_gpu(int *C, size_t n)
 int main()
 {
     int *W, *serial_W;
+    int n;
     cout << "Please enter a value for n: " << endl;
     cin >> n;
     W = new int[n * n];
