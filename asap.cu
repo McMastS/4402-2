@@ -130,12 +130,12 @@ int main(int argc, char *argv[])
     int *W, *serial_W;
     int n;
     if (argc == 2) {
-        n = argv[1];
+        n = atoi(argv[1]);
     } else if (argc == 1) {
         cout << "Please enter a value for n: " << endl;
         cin >> n;
     } else {
-        cout << "Usage: ./asap {n}"
+        cout << "Usage: ./asap {n}" << endl;
     }
     W = new int[n * n];
     serial_W = new int[n*n]; 
