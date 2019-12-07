@@ -28,13 +28,25 @@ void checkCudaError(const char *msg)
 }
 
 template<typename T>
-void random_matrices(T *M, T *N, size_t height, size_t width, int p = 2) 
+void random_graph_matrices(T *M, T *N, size_t height, size_t width, int p = 2) 
 {
     for(size_t i = 0; i < height; ++i) {
         for (size_t j = 0; j < width; ++j) {
-            int random = rand() % p;
-            M[i * width + j] = random;
-            N[i * width + j] = random; 
+            // Set diagonals to zero
+            if (i == j) {
+                M[i * width + j] = 0;
+            }
+            // Add random infinities, around half the graph will be infinite
+            int inf = rand() % 2;
+            if (inf) {
+                M[i* width + j] = 100000;
+                N[i * width + j] = 100000;
+            } else {
+                // Generate random number between 0 and p to represent the current edge
+                int random = rand() % p;
+                M[i * width + j] = random;
+                N[i * width + j] = random;
+            } 
         }
     }
 }
@@ -105,6 +117,7 @@ void min_plus_gpu(int *C, size_t n)
     for (int k = 0; k < n; k++) {
         min_plus_kernel<<<grid_dim, block_size>>>(Cd, n, k);
         cudaThreadSynchronize();
+        checkCudaError(strcat("call the matrix multiplication kernel and synch during loop: ", k));
     }
     cudaMemcpy(C, Cd, mem_size, cudaMemcpyDeviceToHost);
 
@@ -119,9 +132,7 @@ int main()
     int serial_W [n*n] = {0, 3, 100, 7, 8, 0, 2, 100, 5, 100, 0, 1, 2, 100, 100, 0};
     // cout << "Please enter a value for n: " << endl;
     // cin >> n;
-    
-    // assert(n % BLOCK_SIZE == 0);
-
+ 
     try {
         
         // random_matrices(W, serial_W, n, n, 10);
