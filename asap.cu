@@ -69,7 +69,7 @@ void print_matrix(const T *M, size_t height, size_t width)
     cout << endl;
 }
 
-void serial_min_plus(int *A, size_t n) {
+void serial_fw(int *A, size_t n) {
     for (int k = 0; k < n; k++) {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -125,6 +125,24 @@ void floyd_warshall_gpu(int *C, size_t n)
     cudaFree(Cd);
 }
 
+double time_fw_gpu(int *C, size_t n) {
+    clock_t time1 = clock();
+
+    floyd_warshall_gpu(C, n);
+
+    clock_t time2 = clock();
+    return (time2 - time1) / double(CLOCKS_PER_SEC);
+}
+
+double time_fw_serial(int *C, size_t n) {
+    clock_t time1 = clock();
+
+    serial_fw(C, n);
+
+    clock_t time2 = clock();
+    return (time2 - time1) / double(CLOCKS_PER_SEC);
+}
+
 int main(int argc, char *argv[])
 {
     int *W, *serial_W;
@@ -136,19 +154,20 @@ int main(int argc, char *argv[])
         cin >> n;
     } else {
         cout << "Usage: ./asap {n}" << endl;
+        return;
     }
     W = new int[n * n];
     serial_W = new int[n*n]; 
  
-    try {
-        
+    try {  
         random_graph_matrices(W, serial_W, n, n, 10);
-
-        print_matrix(W, n, n);
-        print_matrix(serial_W, n, n);
-
-        floyd_warshall_gpu(W, n);
-        serial_min_plus(serial_W, n);
+        if (n < 32) {
+            print_matrix(W, n, n);
+            print_matrix(serial_W, n, n);
+        }
+        
+        cout << "GPU: " << time_fw_gpu(W, n) << endl;
+        cout << "serial: " << time_fw_serial(serial_W, n) << endl;
     } catch (cuda_exception &err) {
         cout << err.what() << endl;
         delete [] W;
@@ -161,8 +180,10 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    print_matrix(W, n, n);
-    print_matrix(serial_W, n, n);
+    if (n < 32) {
+        print_matrix(W, n, n);
+        print_matrix(serial_W, n, n);
+    }
 
     delete [] W;
     delete [] serial_W;
